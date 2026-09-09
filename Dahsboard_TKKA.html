@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="Dashboard Tier-2 PKPN dengan kontrol isian interaktif">
+<style>:root { --dir-color: #B7500A; }</style>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: Arial, sans-serif;
+  background: #F0F4F8;
+  width: 100%;
+  padding: 14px 7px 28px;
+  color: #1a1a1a;
+  font-size: 12px;
+}
+
+/* ── TOP HEADER ─────────────────────────── */
+.top-header {
+  background: var(--dir-color, #1B4F8A);
+  color: #fff;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+.top-header .title-block h1 { font-size: 15px; font-weight: bold; letter-spacing: 0.3px; }
+.top-header .title-block p  { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+.top-header .meta { display: flex; gap: 12px; align-items: center; }
+.meta-box {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 4px;
+  padding: 5px 14px;
+  text-align: center;
+}
+.meta-box .val { font-size: 18px; font-weight: bold; line-height: 1.1; }
+.meta-box .lbl { font-size: 10px; opacity: 0.85; }
+.period-inline {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 4px;
+  padding: 6px 14px;
+  color: #fff;
+  text-align: center;
+}
+.period-inline .lbl { font-size: 10px; opacity: 0.75; }
+.period-inline .val { font-size: 14px; font-weight: bold; }
+
+/* ── SUMMARY ROW ────────────────────────── */
+.summary-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.sum-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 4px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-left: 5px solid #ccc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.sum-card.green { border-left-color: #3A8A3A; }
+.sum-card.amber { border-left-color: #C8860A; }
+.sum-card.red   { border-left-color: #C0392B; }
+.sum-card .dot  { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; }
+.sum-card.green .dot { background: #3A8A3A; }
+.sum-card.amber .dot { background: #C8860A; }
+.sum-card.red   .dot { background: #C0392B; }
+.sum-card .num  { font-size: 24px; font-weight: bold; line-height: 1; }
+.sum-card.green .num { color: #3A8A3A; }
+.sum-card.amber .num { color: #C8860A; }
+.sum-card.red   .num { color: #C0392B; }
+.sum-card .desc { font-size: 11px; color: #555; line-height: 1.4; }
+.sum-card .desc strong { display: block; font-size: 12.5px; color: #1a1a1a; }
+
+/* ── SECTION TITLE ──────────────────────── */
+.sec-title {
+  font-size: 11.5px;
+  font-weight: bold;
+  color: var(--dir-color, #1B4F8A);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--dir-color, #1B4F8A);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  margin-top: 0;
+}
+
+/* ── PROGRAM BLOCK ──────────────────────── */
+.prog-block {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.prog-header {
+  background: var(--dir-color, #1B4F8A);
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.prog-header .prog-title { font-size: 13.5px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+.prog-header .prog-meta  { font-size: 11px; opacity: 0.85; }
+.prog-header .prog-rag-wrap { display: flex; align-items: center; gap: 10px; }
+.prog-rag-label { font-size: 11px; opacity: 0.8; }
+
+/* RAG badge */
+.rag {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 10px;
+  font-size: 11.5px;
+  font-weight: bold;
+  color: #fff;
+  white-space: nowrap;
+}
+.rag.g { background: #3A8A3A; }
+.rag.a { background: #C8860A; }
+.rag.r { background: #C0392B; }
+
+/* trend */
+.trend { font-size: 14px; font-weight: bold; }
+.trend.up   { color: #3A8A3A; }
+.trend.same { color: #888; }
+.trend.down { color: #C0392B; }
+
+/* ── PROJECT TABLE (inside program block) ── */
+.proj-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.proj-table thead tr th {
+  background: #EBF2FA;
+  color: #1B4F8A;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 6px 10px;
+  text-align: center;
+  border-bottom: 1px solid #C8D8EA;
+  border-right: 1px solid #D8E8F4;
+  white-space: nowrap;
+}
+.proj-table thead tr th:first-child { text-align: left; }
+.proj-table thead tr th:last-child  { border-right: none; }
+.proj-table tbody tr { border-bottom: 1px solid #E8EEF4; }
+.proj-table tbody tr:last-child { border-bottom: none; }
+.proj-table tbody tr:nth-child(even) { background: #F7FBFF; }
+.proj-table tbody td {
+  padding: 7px 10px;
+  vertical-align: middle;
+  font-size: 11.5px;
+  border-right: 1px solid #E8EEF4;
+}
+.proj-table tbody td:last-child { border-right: none; }
+
+/* project name */
+.proj-name { font-weight: bold; font-size: 12px; color: #1a1a1a; }
+.proj-kl   { font-size: 10.5px; color: #777; margin-top: 1px; }
+
+/* editable inline fields */
+[contenteditable="true"].editable-inline {
+  outline: none;
+  cursor: text;
+  border-radius: 2px;
+  padding: 1px 2px;
+  margin: -1px -2px;
+  min-width: 8px;
+  display: inline-block;
+}
+[contenteditable="true"].editable-inline:hover {
+  background: rgba(27,79,138,0.07);
+}
+.top-header [contenteditable="true"].editable-inline:hover,
+.prog-header [contenteditable="true"].editable-inline:hover {
+  background: rgba(255,255,255,0.2);
+}
+[contenteditable="true"].editable-inline:focus {
+  background: #FFFDF2;
+  color: #1a1a1a;
+  outline: 1px dashed #B7C7D8;
+}
+[contenteditable="true"].editable-inline:empty:before {
+  content: attr(data-placeholder);
+  color: #9AA5B1;
+  font-style: italic;
+}
+
+/* .sec-title tetap butuh display:block agar border-bottom selebar penuh
+   (class .editable-inline meng-set inline-block & margin negatif, jadi ditimpa khusus di sini) */
+.sec-title.editable-inline {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+/* baris nomor + tombol hapus proyek */
+.no-wrap { display: inline-flex; align-items: center; gap: 3px; justify-content: center; width: 100%; }
+.row-btn {
+  border: 1px solid #C0392B;
+  background: #fff;
+  color: #C0392B;
+  border-radius: 3px;
+  font-size: 9px;
+  line-height: 1.4;
+  padding: 0 4px;
+  cursor: pointer;
+}
+.row-btn:hover { background: #FDE1E1; }
+
+/* baris tambah proyek */
+.add-row-tr td { padding: 7px 10px; background: #F7FBFF; border-right: none; }
+.add-row-btn {
+  border: 1px dashed var(--dir-color, #1B4F8A);
+  background: #fff;
+  color: var(--dir-color, #1B4F8A);
+  border-radius: 3px;
+  font-size: 10.5px;
+  font-weight: bold;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.add-row-btn:hover { background: #EBF2FA; }
+
+/* criticality — two categories only */
+.crit {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: 1px solid;
+}
+.crit.utama    { background: #FDDEDE; border-color: #C0392B; color: #8A1A1A; }
+.crit.pendukung { background: #E8EEF4; border-color: #888;    color: #444; }
+
+/* budget bar */
+.bar-wrap { background: #E8EEF4; border-radius: 3px; height: 9px; width: 100%; }
+.bar-fill { height: 9px; border-radius: 3px; }
+.bar-fill.g { background: #3A8A3A; }
+.bar-fill.a { background: #C8860A; }
+.bar-fill.r { background: #C0392B; }
+.bar-label  { font-size: 10.5px; color: #555; margin-top: 2px; }
+
+/* milestone pills */
+.ms-wrap { display: flex; flex-wrap: wrap; gap: 3px; }
+.ms-pill {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
+  color: #444;
+  background: #F5F5F5;
+  white-space: nowrap;
+}
+.ms-pill.done  { background: #D4EDDA; border-color: #3A8A3A; color: #2A6A2A; }
+.ms-pill.risk  { background: #FFF3CD; border-color: #C8860A; color: #8A5A00; }
+.ms-pill.late  { background: #FDDEDE; border-color: #C0392B; color: #8A1A1A; }
+
+/* constraint */
+.constraint { font-size: 11px; color: #444; line-height: 1.45; }
+.tag {
+  display: inline-block;
+  font-size: 9.5px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-right: 3px;
+  color: #fff;
+}
+.tag.r { background: #C0392B; }
+.tag.a { background: #C8860A; }
+.tag.g { background: #3A8A3A; }
+
+/* Outcome row inside prog-header */
+.prog-outcome {
+  font-size: 10.5px;
+  opacity: 0.9;
+  margin-top: 4px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.prog-outcome span {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 3px;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+.prog-outcome .lbl { opacity: 0.75; margin-right: 3px; }
+
+
+
+/* PSN Dropdown Select */
+.psn-select {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-block; /* Mengubah tampilan agar sesuai ukuran konten */
+  width: auto;           /* Mencegah elemen mengambil lebar penuh */
+  border: 1px solid transparent;
+  background: transparent;
+  color: transparent;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.psn-select:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+.psn-select.is-psn {
+  background: #1B4F8A;
+  color: #fff;
+  border-color: #1B4F8A;
+}
+.psn-select.is-psn:hover {
+  background: #153E6D;
+  border-color: #1B4F8A;
+}
+.psn-select option {
+  background: #ffffff;
+  color: #1a1a1a;
+  font-weight: normal;
+}
+
+/* number col */
+td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
+.tc { text-align: center; }
+
+/* RAG breakdown summary inside prog-header */
+.rag-breakdown {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+}
+.rag-mini {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.rag-mini .dot { width: 10px; height: 10px; border-radius: 50%; }
+.rag-mini .dot.g { background: #3A8A3A; }
+.rag-mini .dot.a { background: #C8860A; }
+.rag-mini .dot.r { background: #C0392B; }
+
+/* ── INSIGHT BOX ────────────────────────── */
+.insight-box {
+  margin-top: 12px;
+  background: #fff;
+  border-left: 5px solid var(--dir-color, #1B4F8A);
+  border-radius: 0 4px 4px 0;
+  padding: 9px 14px;
+  font-size: 11.5px;
+  color: #333;
+  line-height: 1.6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.insight-box strong { color: var(--dir-color, #1B4F8A); }
+
+/* ── LEGEND ─────────────────────────────── */
+.legend {
+  margin-top: 10px;
+  display: flex;
+  gap: 18px;
+  font-size: 10.5px;
+  color: #555;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 4px; }
+.legend-dot  { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── RAG LOGIC NOTE ─────────────────────── */
+.rag-logic {
+  background: #FFFBE6;
+  border-left: 3px solid #C8860A;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 10px;
+  border-radius: 0 3px 3px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="top-header">
+  <div class="title-block">
+    <h1>DASHBOARD TIER-2 — DIREKTORAT TKKA</h1>
+    <p>Transportasi, Konektivitas, Ketenagalistrikan &amp; Aksesibilitas &nbsp;|&nbsp; Kedeputian Infrastruktur BAPPENAS</p>
+  </div>
+  <div class="meta">
+    <div class="period-inline"><div class="lbl">PERIODE PELAPORAN</div><div class="val">[Bulan] [Tahun]</div></div>
+    <div class="meta-box"><div class="val editable-inline" contenteditable="true" data-field-name="top-total-program" data-placeholder="7">7</div><div class="lbl">PROGRAM</div></div>
+    <div class="meta-box"><div class="val editable-inline" contenteditable="true" data-field-name="top-total-anggaran" data-placeholder="~1.241 T">~1.241 T</div><div class="lbl">TOTAL ANGGARAN</div></div>
+  </div>
+</div>
+
+<div class="summary-row">
+  <div class="sum-card red"><div class="dot"></div><div><div class="num">3</div><div class="desc"><strong>Off Track</strong>43% program</div></div></div>
+  <div class="sum-card amber"><div class="dot"></div><div><div class="num">3</div><div class="desc"><strong>At Risk</strong>43% program</div></div></div>
+  <div class="sum-card green"><div class="dot"></div><div><div class="num">1</div><div class="desc"><strong>On Track</strong>14% program</div></div></div>
+  <div style="flex:3; background:#fff; border-radius:4px; padding:10px 14px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="font-size:11px; font-weight:bold; color:#B7500A; margin-bottom:5px;">DISTRIBUSI STATUS PROGRAM</div>
+    <div style="display:flex; height:16px; border-radius:4px; overflow:hidden; gap:2px;">
+      <div style="flex:3; background:#C0392B; border-radius:3px 0 0 3px;"></div>
+      <div style="flex:3; background:#C8860A;"></div>
+      <div style="flex:1; background:#3A8A3A; border-radius:0 3px 3px 0;"></div>
+    </div>
+    <div style="display:flex; gap:16px; margin-top:5px; font-size:10.5px; color:#555;">
+      <span>🔴 Off Track: 3</span><span>🟡 At Risk: 3</span><span>🟢 On Track: 1</span>
+    </div>
+  </div>
+</div>
+
+<div class="rag-logic">
+  <strong>Logika RAG Program:</strong> Status RAG Program ditentukan oleh proyek komponen dengan peran <strong>Kritis (Inti)</strong>. Jika ≥1 proyek Kritis berstatus RED → Program RED. Jika ≥1 proyek Kritis AMBER (tanpa RED) → Program AMBER. Semua Kritis GREEN → Program GREEN.
+</div>
+
+<!-- PROGRAM 1: PLTS 100GW -->
+<div class="sec-title editable-inline" contenteditable="true" data-field-name="sec-title-0" data-placeholder="PROGRAM 1 — PLTS 100GW">PROGRAM 1 — PLTS 100GW</div>
+<div class="prog-block">
+  <div class="prog-header">
+    <div>
+      <div class="prog-title">
+        <span class="editable-inline" contenteditable="true" data-field-name="p0-title" data-placeholder="PLTS 100GW">PLTS 100GW</span> 
+        <select class="psn-select is-psn" name="p0-psn">
+          <option value="">NON</option>
+          <option value="PSN" selected>PSN</option>
+        </select>
+      </div>
+      <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p0-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 1.113 T | Target: 100 GW kapasitas PLTS 2029">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 1.113 T &nbsp;|&nbsp; Target: 100 GW kapasitas PLTS 2029</div>
+    </div>
+    <div class="prog-rag-wrap">
+      <div class="rag-breakdown">
+        <div class="rag-mini"><div class="dot r"></div>2 Proyek RED</div>
+        <div class="rag-mini"><div class="dot a"></div>2 Proyek AMBER</div>
+        <div class="rag-mini"><div class="dot g"></div>1 Proyek GREEN</div>
+      </div>
+      <div><div class="prog-rag-label">Status Program:</div><span class="rag r">OFF TRACK</span> <span class="trend down" style="color:#fff;">▼</span></div>
+    </div>
+  </div>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th style="text-align:left; width:195px;">Nama Proyek</th>
+        <th style="width:70px;">Peran</th>
+        <th style="width:68px;">RAG Proyek</th>
+        <th style="width:50px;">Tren</th>
+        <th style="width:120px;">Realisasi Anggaran Tahunan</th>
+        <th style="width:155px;">Milestone Kritis Aktif</th>
+        <th>Kendala Utama &amp; Status Eskalasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td><div class="proj-name">PLTS Terapung Cirata Fase 2</div><div class="proj-kl">PLN / KESDM</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag r">RED</span></td>
+        <td class="tc"><span class="trend down">▼</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill r" style="width:15%;"></div></div><div class="bar-label">15% (Target: 35%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill late">FID — Terlambat</span><span class="ms-pill late">Kontrak EPC — Terlambat</span></div></td>
+        <td class="constraint"><span class="tag r">ESKALASI</span> Regulasi tarif feed-in belum ditetapkan Kemenkeu. Gap pembiayaan ~Rp 80T. Perlu keputusan lintas K/L.</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td><div class="proj-name">PLTS Atap Industri &amp; Komersial</div><div class="proj-kl">PLN / KESDM / Kemenperin</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag r">RED</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill r" style="width:20%;"></div></div><div class="bar-label">20% (Target: 40%)</div></td>
+        <td><div class="ms-pill late">Regulasi Net Metering — Terlambat</span><span class="ms-pill late">Target Adopsi — Terlambat</span></div></td>
+        <td class="constraint"><span class="tag r">ESKALASI</span> Regulasi net metering belum final. Insentif fiskal untuk adopsi industri belum ditetapkan Kemenkeu.</td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td><div class="proj-name">PLTS Lahan Kering Nusa Tenggara</div><div class="proj-kl">PLN / KESDM</div></td>
+        <td class="tc"><span class="crit enable">Pemungkin</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:55%;"></div></div><div class="bar-label">55% (Target: 65%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Lahan — At Risk</span><span class="ms-pill done">DED — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Pembebasan lahan di 5 cluster terkendala izin Pemda. Recovery plan sedang disiapkan.</td>
+      </tr>
+      <tr>
+        <td class="no">4</td>
+        <td><div class="proj-name">Jaringan Transmisi PLTS</div><div class="proj-kl">PLN</div></td>
+        <td class="tc"><span class="crit enable">Pemungkin</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:60%;"></div></div><div class="bar-label">60% (Target: 70%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Pengadaan Kabel — At Risk</span><span class="ms-pill done">DED — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Keterlambatan pengadaan kabel transmisi HVDC. Negosiasi dengan vendor sedang berlangsung.</td>
+      </tr>
+      <tr>
+        <td class="no">5</td>
+        <td><div class="proj-name">Sistem Penyimpanan Energi (BESS)</div><div class="proj-kl">PLN / KESDM</div></td>
+        <td class="tc"><span class="crit support">Pendukung</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:82%;"></div></div><div class="bar-label">82% (Target: 78%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">Pilot BESS — Aktif</span><span class="ms-pill done">Kontrak Pengadaan — Selesai</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Tidak ada kendala. Pilot BESS 200 MWh berjalan sesuai jadwal.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PROGRAM 2: ELEKTRIFIKASI DESA -->
+<div class="sec-title editable-inline" contenteditable="true" data-field-name="sec-title-1" data-placeholder="PROGRAM 2 — ELEKTRIFIKASI DESA">PROGRAM 2 — ELEKTRIFIKASI DESA</div>
+<div class="prog-block">
+  <div class="prog-header">
+    <div>
+      <div class="prog-title">
+        <span class="editable-inline" contenteditable="true" data-field-name="p1-title" data-placeholder="Elektrifikasi Desa">Elektrifikasi Desa</span> 
+        <select class="psn-select" name="p1-psn">
+          <option value="" selected>Non</option>
+          <option value="PSN">PSN</option>
+        </select>
+      </div>
+      <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p1-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 58,39 T | Target: Rasio elektrifikasi 100%">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 58,39 T &nbsp;|&nbsp; Target: Rasio elektrifikasi 100%</div>
+    </div>
+    <div class="prog-rag-wrap">
+      <div class="rag-breakdown">
+        <div class="rag-mini"><div class="dot r"></div>0 Proyek RED</div>
+        <div class="rag-mini"><div class="dot a"></div>2 Proyek AMBER</div>
+        <div class="rag-mini"><div class="dot g"></div>1 Proyek GREEN</div>
+      </div>
+      <div><div class="prog-rag-label">Status Program:</div><span class="rag a">AT RISK</span> <span class="trend down" style="color:#fff;">▼</span></div>
+    </div>
+  </div>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th style="text-align:left; width:195px;">Nama Proyek</th>
+        <th style="width:70px;">Peran</th>
+        <th style="width:68px;">RAG Proyek</th>
+        <th style="width:50px;">Tren</th>
+        <th style="width:120px;">Realisasi Anggaran Tahunan</th>
+        <th style="width:155px;">Milestone Kritis Aktif</th>
+        <th>Kendala Utama &amp; Status Eskalasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td><div class="proj-name">Jaringan Distribusi Desa Terpencil</div><div class="proj-kl">PLN / KESDM</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend down">▼</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:60%;"></div></div><div class="bar-label">60% (Target: 75%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Pengadaan Material — At Risk</span><span class="ms-pill done">Survei Lokasi — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Keterlambatan pengadaan material jaringan distribusi. Akses ke desa terpencil terkendala infrastruktur jalan yang rusak.</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td><div class="proj-name">PLTS Off-Grid Desa Terisolir</div><div class="proj-kl">KESDM / PLN</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:65%;"></div></div><div class="bar-label">65% (Target: 76%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Instalasi Panel — At Risk</span><span class="ms-pill done">Pengadaan Panel — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Instalasi panel di Papua terkendala cuaca dan akses. Recovery plan sudah disiapkan PLN.</td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td><div class="proj-name">Gardu Distribusi &amp; Jaringan Tegangan Rendah</div><div class="proj-kl">PLN</div></td>
+        <td class="tc"><span class="crit support">Pendukung</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:82%;"></div></div><div class="bar-label">82% (Target: 78%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">Konstruksi Gardu — On Track</span><span class="ms-pill done">Kontrak Aktif</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Tidak ada kendala. Pembangunan gardu distribusi berjalan sesuai jadwal.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PROGRAM 3: KOMPOR LISTRIK -->
+<div class="sec-title editable-inline" contenteditable="true" data-field-name="sec-title-2" data-placeholder="PROGRAM 3 — KOMPOR LISTRIK">PROGRAM 3 — KOMPOR LISTRIK</div>
+<div class="prog-block">
+  <div class="prog-header">
+    <div>
+      <div class="prog-title">
+        <span class="editable-inline" contenteditable="true" data-field-name="p2-title" data-placeholder="Kompor Listrik">Kompor Listrik</span> 
+        <select class="psn-select" name="p2-psn">
+          <option value="" selected>Non</option>
+          <option value="PSN">PSN</option>
+        </select>
+      </div>
+      <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p2-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 27,86 T | Target: 15 Juta unit konversi">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 27,86 T &nbsp;|&nbsp; Target: 15 Juta unit konversi</div>
+    </div>
+    <div class="prog-rag-wrap">
+      <div class="rag-breakdown">
+        <div class="rag-mini"><div class="dot r"></div>2 Proyek RED</div>
+        <div class="rag-mini"><div class="dot a"></div>0 Proyek AMBER</div>
+        <div class="rag-mini"><div class="dot g"></div>1 Proyek GREEN</div>
+      </div>
+      <div><div class="prog-rag-label">Status Program:</div><span class="rag r">OFF TRACK</span> <span class="trend down" style="color:#fff;">▼</span></div>
+    </div>
+  </div>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th style="text-align:left; width:195px;">Nama Proyek</th>
+        <th style="width:70px;">Peran</th>
+        <th style="width:68px;">RAG Proyek</th>
+        <th style="width:50px;">Tren</th>
+        <th style="width:120px;">Realisasi Anggaran Tahunan</th>
+        <th style="width:155px;">Milestone Kritis Aktif</th>
+        <th>Kendala Utama &amp; Status Eskalasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td><div class="proj-name">Distribusi Kompor Listrik MBR</div><div class="proj-kl">KESDM / PLN / Kemenperin</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag r">RED</span></td>
+        <td class="tc"><span class="trend down">▼</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill r" style="width:30%;"></div></div><div class="bar-label">30% (Target: 60%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill late">Distribusi Fase 2 — Terlambat</span><span class="ms-pill late">Target Penerima — Terlambat</span></div></td>
+        <td class="constraint"><span class="tag r">ESKALASI</span> Resistensi masyarakat tinggi. Kapasitas jaringan listrik di daerah sasaran tidak memadai. Perlu penguatan jaringan PLN terlebih dahulu.</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td><div class="proj-name">Penguatan Jaringan Listrik Daerah Sasaran</div><div class="proj-kl">PLN</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag r">RED</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill r" style="width:35%;"></div></div><div class="bar-label">35% (Target: 58%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill late">Upgrade Trafo — Terlambat</span><span class="ms-pill late">Perkuatan Jaringan — Terlambat</span></div></td>
+        <td class="constraint"><span class="tag r">ESKALASI</span> Anggaran penguatan jaringan tidak mencukupi. Perlu realokasi anggaran PLN atau tambahan APBN.</td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td><div class="proj-name">Kampanye &amp; Edukasi Konversi</div><div class="proj-kl">KESDM / Kemendagri</div></td>
+        <td class="tc"><span class="crit support">Pendukung</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:80%;"></div></div><div class="bar-label">80% (Target: 75%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">Materi Edukasi — Selesai</span><span class="ms-pill done">Pelatihan Kader — On Track</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Tidak ada kendala. Kampanye berjalan di 34 provinsi. Namun efektivitas terbatas karena hambatan teknis distribusi.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PROGRAM 4: PLTA TERINTEGRASI -->
+<div class="sec-title editable-inline" contenteditable="true" data-field-name="sec-title-3" data-placeholder="PROGRAM 4 — PLTA SKALA BESAR TERINTEGRASI">PROGRAM 4 — PLTA SKALA BESAR TERINTEGRASI</div>
+<div class="prog-block">
+  <div class="prog-header">
+    <div>
+      <div class="prog-title">
+        <span class="editable-inline" contenteditable="true" data-field-name="p3-title" data-placeholder="PLTA Skala Besar Terintegrasi">PLTA Skala Besar Terintegrasi</span> 
+        <select class="psn-select" name="p3-psn">
+          <option value="" selected>Non</option>
+          <option value="PSN">PSN</option>
+        </select>
+      </div>
+      <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p3-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 25,88 T | Target: 5.000 MW kapasitas PLTA baru">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 25,88 T &nbsp;|&nbsp; Target: 5.000 MW kapasitas PLTA baru</div>
+    </div>
+    <div class="prog-rag-wrap">
+      <div class="rag-breakdown">
+        <div class="rag-mini"><div class="dot r"></div>0 Proyek RED</div>
+        <div class="rag-mini"><div class="dot a"></div>2 Proyek AMBER</div>
+        <div class="rag-mini"><div class="dot g"></div>1 Proyek GREEN</div>
+      </div>
+      <div><div class="prog-rag-label">Status Program:</div><span class="rag a">AT RISK</span> <span class="trend same" style="color:#fff;">●</span></div>
+    </div>
+  </div>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th style="text-align:left; width:195px;">Nama Proyek</th>
+        <th style="width:70px;">Peran</th>
+        <th style="width:68px;">RAG Proyek</th>
+        <th style="width:50px;">Tren</th>
+        <th style="width:120px;">Realisasi Anggaran Tahunan</th>
+        <th style="width:155px;">Milestone Kritis Aktif</th>
+        <th>Kendala Utama &amp; Status Eskalasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td><div class="proj-name">PLTA Peusangan 2</div><div class="proj-kl">PLN / Swasta</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:58%;"></div></div><div class="bar-label">58% (Target: 70%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Financial Close — At Risk</span><span class="ms-pill done">AMDAL — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Financial close KPBU tertunda karena negosiasi dengan lender internasional (ADB, JBIC) belum selesai.</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td><div class="proj-name">PLTA Batang Toru (Sumatera)</div><div class="proj-kl">PLN / Swasta</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend down">▼</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:52%;"></div></div><div class="bar-label">52% (Target: 65%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Izin Kawasan Hutan — At Risk</span><span class="ms-pill done">DED — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Izin pinjam pakai kawasan hutan dari KLHK masih dalam proses. Koordinasi lintas K/L diperlukan.</td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td><div class="proj-name">Transmisi PLTA ke Grid Nasional</div><div class="proj-kl">PLN</div></td>
+        <td class="tc"><span class="crit support">Pendukung</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:80%;"></div></div><div class="bar-label">80% (Target: 76%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">DED Transmisi — Selesai</span><span class="ms-pill done">Kontrak Konstruksi — Aktif</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Tidak ada kendala. Pembangunan jaringan transmisi berjalan sesuai jadwal.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PROGRAM 5: GREEN REFINERY -->
+<div class="sec-title editable-inline" contenteditable="true" data-field-name="sec-title-4" data-placeholder="PROGRAM 5 — GREEN REFINERY">PROGRAM 5 — GREEN REFINERY</div>
+<div class="prog-block">
+  <div class="prog-header">
+    <div>
+      <div class="prog-title">
+        <span class="editable-inline" contenteditable="true" data-field-name="p4-title" data-placeholder="Green Refinery">Green Refinery</span> 
+        <select class="psn-select is-psn" name="p4-psn">
+          <option value="">Non</option>
+          <option value="PSN" selected>PSN</option>
+        </select>
+      </div>
+      <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p4-meta" data-placeholder="K/L Utama: KESDM / Pertamina | Anggaran: Rp 13 T | Target: 3 kilang hijau beroperasi">K/L Utama: KESDM / Pertamina &nbsp;|&nbsp; Anggaran: Rp 13 T &nbsp;|&nbsp; Target: 3 kilang hijau beroperasi</div>
+    </div>
+    <div class="prog-rag-wrap">
+      <div class="rag-breakdown">
+        <div class="rag-mini"><div class="dot r"></div>0 Proyek RED</div>
+        <div class="rag-mini"><div class="dot a"></div>0 Proyek AMBER</div>
+        <div class="rag-mini"><div class="dot g"></div>3 Proyek GREEN</div>
+      </div>
+      <div><div class="prog-rag-label">Status Program:</div><span class="rag g">ON TRACK</span> <span class="trend up" style="color:#fff;">▲</span></div>
+    </div>
+  </div>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th style="text-align:left; width:195px;">Nama Proyek</th>
+        <th style="width:70px;">Peran</th>
+        <th style="width:68px;">RAG Proyek</th>
+        <th style="width:50px;">Tren</th>
+        <th style="width:120px;">Realisasi Anggaran Tahunan</th>
+        <th style="width:155px;">Milestone Kritis Aktif</th>
+        <th>Kendala Utama &amp; Status Eskalasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td><div class="proj-name">Green Refinery Cilacap</div><div class="proj-kl">Pertamina</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:88%;"></div></div><div class="bar-label">88% (Target: 82%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">Konstruksi — On Track</span><span class="ms-pill done">Commissioning Q4 2026</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Tidak ada kendala. Konstruksi berjalan di atas target. Commissioning dijadwalkan Q4 2026.</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td><div class="proj-name">Green Refinery Plaju</div><div class="proj-kl">Pertamina</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:82%;"></div></div><div class="bar-label">82% (Target: 80%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">EPC Kontrak — Aktif</span><span class="ms-pill done">Pengadaan Selesai</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Tidak ada kendala. Konstruksi berjalan sesuai jadwal.</td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td><div class="proj-name">Rantai Pasok Bahan Baku (CPO)</div><div class="proj-kl">Pertamina / Kemenperin</div></td>
+        <td class="tc"><span class="crit support">Pendukung</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:78%;"></div></div><div class="bar-label">78% (Target: 76%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">Kontrak Pasokan — Aktif</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Kontrak pasokan CPO sudah ditandatangani. Tidak ada kendala.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PROGRAM 6: JARGAS 1 JUTA SR -->
+<div class="sec-title editable-inline" contenteditable="true" data-field-name="sec-title-5" data-placeholder="PROGRAM 6 — JARGAS 1 JUTA SR">PROGRAM 6 — JARGAS 1 JUTA SR</div>
+<div class="prog-block">
+  <div class="prog-header">
+    <div>
+      <div class="prog-title">
+        <span class="editable-inline" contenteditable="true" data-field-name="p5-title" data-placeholder="Jargas 1 Juta SR">Jargas 1 Juta SR</span> 
+        <select class="psn-select is-psn" name="p5-psn">
+          <option value="">Non</option>
+          <option value="PSN" selected>PSN</option>
+        </select>
+      </div>
+      <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p5-meta" data-placeholder="K/L Utama: KESDM | Anggaran: Rp 10,04 T | Target: 1 Juta sambungan rumah gas">K/L Utama: KESDM &nbsp;|&nbsp; Anggaran: Rp 10,04 T &nbsp;|&nbsp; Target: 1 Juta sambungan rumah gas</div>
+    </div>
+    <div class="prog-rag-wrap">
+      <div class="rag-breakdown">
+        <div class="rag-mini"><div class="dot r"></div>0 Proyek RED</div>
+        <div class="rag-mini"><div class="dot a"></div>2 Proyek AMBER</div>
+        <div class="rag-mini"><div class="dot g"></div>1 Proyek GREEN</div>
+      </div>
+      <div><div class="prog-rag-label">Status Program:</div><span class="rag a">AT RISK</span> <span class="trend down" style="color:#fff;">▼</span></div>
+    </div>
+  </div>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th style="text-align:left; width:195px;">Nama Proyek</th>
+        <th style="width:70px;">Peran</th>
+        <th style="width:68px;">RAG Proyek</th>
+        <th style="width:50px;">Tren</th>
+        <th style="width:120px;">Realisasi Anggaran Tahunan</th>
+        <th style="width:155px;">Milestone Kritis Aktif</th>
+        <th>Kendala Utama &amp; Status Eskalasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td><div class="proj-name">Jaringan Distribusi Gas Kota</div><div class="proj-kl">KESDM / PGN</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend down">▼</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:63%;"></div></div><div class="bar-label">63% (Target: 78%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Izin Galian Pemda — At Risk</span><span class="ms-pill late">Distribusi Area A — Terlambat</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Izin galian jalan dari beberapa Pemda tertunda. Koordinasi dengan Kemendagri diperlukan untuk percepatan.</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td><div class="proj-name">Pipa Transmisi Gas</div><div class="proj-kl">PGN / KESDM</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:68%;"></div></div><div class="bar-label">68% (Target: 78%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Pembebasan ROW — At Risk</span><span class="ms-pill done">DED — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Pembebasan right-of-way di 3 segmen terkendala. Recovery plan sudah disiapkan PGN.</td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td><div class="proj-name">Instalasi SR &amp; Meteran</div><div class="proj-kl">PGN</div></td>
+        <td class="tc"><span class="crit support">Pendukung</span></td>
+        <td class="tc"><span class="rag g">GREEN</span></td>
+        <td class="tc"><span class="trend up">▲</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill g" style="width:80%;"></div></div><div class="bar-label">80% (Target: 76%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill done">Pengadaan Meteran — Selesai</span><span class="ms-pill done">Instalasi — On Track</span></div></td>
+        <td class="constraint"><span class="tag g">OK</span> Tidak ada kendala. Instalasi SR dan meteran berjalan sesuai jadwal di area yang sudah tersambung pipa.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PROGRAM 7: KONVERSI MOTOR LISTRIK -->
+<div class="sec-title editable-inline" contenteditable="true" data-field-name="sec-title-6" data-placeholder="PROGRAM 7 — KONVERSI MOTOR LISTRIK">PROGRAM 7 — KONVERSI MOTOR LISTRIK</div>
+<div class="prog-block">
+  <div class="prog-header">
+    <div>
+      <div class="prog-title">
+        <span class="editable-inline" contenteditable="true" data-field-name="p6-title" data-placeholder="Konversi Motor Listrik">Konversi Motor Listrik</span> 
+        <select class="psn-select" name="p6-psn">
+          <option value="" selected>Non</option>
+          <option value="PSN">PSN</option>
+        </select>
+      </div>
+      <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p6-meta" data-placeholder="K/L Utama: KESDM / Kemenperin | Anggaran: Rp 8,96 T | Target: 1 Juta unit motor terkonversi">K/L Utama: KESDM / Kemenperin &nbsp;|&nbsp; Anggaran: Rp 8,96 T &nbsp;|&nbsp; Target: 1 Juta unit motor terkonversi</div>
+    </div>
+    <div class="prog-rag-wrap">
+      <div class="rag-breakdown">
+        <div class="rag-mini"><div class="dot r"></div>2 Proyek RED</div>
+        <div class="rag-mini"><div class="dot a"></div>1 Proyek AMBER</div>
+        <div class="rag-mini"><div class="dot g"></div>0 Proyek GREEN</div>
+      </div>
+      <div><div class="prog-rag-label">Status Program:</div><span class="rag r">OFF TRACK</span> <span class="trend down" style="color:#fff;">▼</span></div>
+    </div>
+  </div>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th style="text-align:left; width:195px;">Nama Proyek</th>
+        <th style="width:70px;">Peran</th>
+        <th style="width:68px;">RAG Proyek</th>
+        <th style="width:50px;">Tren</th>
+        <th style="width:120px;">Realisasi Anggaran Tahunan</th>
+        <th style="width:155px;">Milestone Kritis Aktif</th>
+        <th>Kendala Utama &amp; Status Eskalasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td><div class="proj-name">Bengkel Konversi Bersertifikat</div><div class="proj-kl">Kemenperin / KESDM</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag r">RED</span></td>
+        <td class="tc"><span class="trend down">▼</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill r" style="width:25%;"></div></div><div class="bar-label">25% (Target: 55%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill late">Sertifikasi Bengkel — Terlambat</span><span class="ms-pill late">Target Bengkel — Terlambat</span></div></td>
+        <td class="constraint"><span class="tag r">ESKALASI</span> Ekosistem bengkel konversi bersertifikat belum memadai. Standar teknis konversi belum final dari Kemenperin.</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td><div class="proj-name">Program Subsidi Konversi</div><div class="proj-kl">Kemenkeu / KESDM</div></td>
+        <td class="tc"><span class="crit core">Kritis</span></td>
+        <td class="tc"><span class="rag r">RED</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill r" style="width:28%;"></div></div><div class="bar-label">28% (Target: 52%)</div></td>
+        <td><div class="ms-pill late">Regulasi Insentif — Terlambat</span><span class="ms-pill late">Penyaluran Subsidi — Terlambat</span></div></td>
+        <td class="constraint"><span class="tag r">ESKALASI</span> Insentif fiskal untuk adopsi belum ditetapkan Kemenkeu. Skema subsidi konversi belum final.</td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td><div class="proj-name">Infrastruktur Pengisian Daya (SPKLU)</div><div class="proj-kl">PLN / KESDM</div></td>
+        <td class="tc"><span class="crit enable">Pemungkin</span></td>
+        <td class="tc"><span class="rag a">AMBER</span></td>
+        <td class="tc"><span class="trend same">●</span></td>
+        <td><div class="bar-wrap"><div class="bar-fill a" style="width:55%;"></div></div><div class="bar-label">55% (Target: 65%)</div></td>
+        <td><div class="ms-wrap"><span class="ms-pill risk">Ekspansi SPKLU — At Risk</span><span class="ms-pill done">Pilot SPKLU — Selesai</span></div></td>
+        <td class="constraint"><span class="tag a">PANTAU</span> Ekspansi SPKLU ke kota-kota tier 2 terkendala perizinan lokasi. Recovery plan sedang disiapkan PLN.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="insight-box">
+  <strong>⚡ Insight Direktorat TKKA:</strong> Direktorat ini menanggung beban terberat di portofolio PKPN dengan 7 program dan anggaran ~Rp 1.241 T. Program PLTS 100GW (Rp 1.113 T — 90% anggaran direktorat) dan Konversi Motor Listrik berstatus RED dan memerlukan intervensi Deputi segera, terutama terkait regulasi Kemenkeu (tarif feed-in, insentif fiskal). Green Refinery menjadi satu-satunya program yang berjalan dengan baik.
+  <br><br>
+  <strong>📋 Agenda Klinik Kesiapan:</strong> (1) Regulasi tarif feed-in PLTS — koordinasi KESDM &amp; Kemenkeu &nbsp;|&nbsp; (2) Insentif fiskal Konversi Motor Listrik — Kemenperin &amp; Kemenkeu &nbsp;|&nbsp; (3) Izin kawasan hutan PLTA Batang Toru — KLHK &nbsp;|&nbsp; (4) Izin galian Jargas — Kemendagri
+</div>
+
+<div class="legend">
+  <strong>Keterangan:</strong>
+  <span class="legend-item"><span class="legend-dot" style="background:#3A8A3A;"></span> On Track</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#C8860A;"></span> At Risk</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#C0392B;"></span> Off Track</span>
+  <span class="legend-item"><span class="crit core" style="font-size:10px;">Kritis</span> Penentu RAG Program</span>
+  <span class="legend-item"><span class="crit enable" style="font-size:10px;">Pemungkin</span></span>
+  <span class="legend-item"><span class="crit support" style="font-size:10px;">Pendukung</span></span>
+  <span class="legend-item">▲ Membaik &nbsp; ● Tetap &nbsp; ▼ Memburuk</span>
+</div>
+
+<!-- ── FIREBASE: sinkronisasi real-time antar pengguna ───────────── -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC3xlXX8_23lSb2r57zIGnXyz52ZMgN13Y",
+    authDomain: "dashboard-tkka.firebaseapp.com",
+    projectId: "dashboard-tkka",
+    storageBucket: "dashboard-tkka.firebasestorage.app",
+    messagingSenderId: "897559244921",
+    appId: "1:897559244921:web:52d4cca5b665b7cc2464a8",
+    measurementId: "G-V2FVWX1WC2"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Satu dokumen per nama file HTML, jadi beberapa dashboard bisa berbagi 1 project Firebase tanpa bentrok.
+    const DOC_ID = (window.location.pathname.split('/').pop() || 'dashboard').replace(/\.html?$/, '') || 'dashboard';
+    const ref = doc(db, 'dashboards', DOC_ID);
+
+    window.fbSaveState = function (data) {
+      setDoc(ref, Object.assign({}, data, { __updatedAt: Date.now() })).catch((err) => {
+        console.warn('Gagal menyimpan ke Firebase:', err);
+      });
+    };
+
+    window.fbSubscribe = function (callback) {
+      onSnapshot(ref, { includeMetadataChanges: true }, (snap) => {
+        // Abaikan echo dari tulisan lokal sendiri yang belum dikonfirmasi server,
+        // supaya tidak menimpa apa yang sedang diketik oleh pengguna ini.
+        if (snap.metadata.hasPendingWrites) return;
+        const data = snap.data();
+        if (data) callback(data);
+      }, (err) => {
+        console.warn('Gagal mendengarkan perubahan Firebase:', err);
+      });
+    };
+
+    window.fbReady = true;
+  } catch (err) {
+    console.warn('Firebase gagal diinisialisasi, dashboard tetap jalan mode lokal saja.', err);
+  }
+</script>
+
+<script>
+/* Dashboard Tier-2 PKPN — Komponen Isian Interaktif */
+(function () {
+  'use strict';
+
+  const STORE_KEY = 'pkpn-tier2-' + (window.location.pathname.split('/').pop() || 'dashboard');
+  const RAG_LABEL = { GREEN: 'ON TRACK', AMBER: 'AT RISK', RED: 'OFF TRACK' };
+
+  function injectStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .control-band {
+        display:flex; align-items:center; justify-content:space-between; gap:12px;
+        margin:0 0 12px; padding:9px 12px; background:#ffffff; border:1px solid #C8D8EA;
+        border-left:5px solid var(--dir-color, #1B4F8A); border-radius:4px;
+        box-shadow:0 1px 3px rgba(0,0,0,.07); font-size:10.5px; color:#4b5563;
+      }
+      .control-band strong { color:var(--dir-color, #1B4F8A); }
+      .control-actions { display:flex; align-items:center; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
+      .ctl-btn { border:1px solid var(--dir-color, #1B4F8A); background:#fff; color:var(--dir-color, #1B4F8A); border-radius:3px; padding:5px 9px; font:600 10.5px Arial,sans-serif; cursor:pointer; }
+      .ctl-btn.primary { background:var(--dir-color, #1B4F8A); color:#fff; }
+      .ctl-btn:hover { filter:brightness(.94); }
+      .period-edit {
+        width:auto; min-width:70px; max-width:260px; box-sizing:content-box;
+        border:1px solid rgba(255,255,255,.65); background:rgba(255,255,255,.14); color:#fff;
+        border-radius:3px; font-size:13px; font-weight:bold; padding:3px 5px; text-align:center;
+      }
+      .period-edit::placeholder { color:rgba(255,255,255,.75); }
+      .period-edit:focus { outline:2px solid #F4C542; }
+      .dash-select, .dash-input, .constraint-text {
+        font:inherit; border:1px solid #C8D8EA; border-radius:3px; background:#fff; color:#263746;
+      }
+      .dash-select { width:100%; min-width:62px; font-size:10.5px; padding:3px 4px; cursor:pointer; }
+      .dash-select:focus, .dash-input:focus, .constraint-text:focus { outline:2px solid rgba(40,94,150,.25); border-color:var(--dir-color, #1B4F8A); }
+      .select-rag-green { background:#E8F4E8; color:#216A28; border-color:#8DC793; font-weight:bold; }
+      .select-rag-amber { background:#FFF3CD; color:#8A5A00; border-color:#E4BC4A; font-weight:bold; }
+      .select-rag-red { background:#FDE1E1; color:#8A1A1A; border-color:#D87979; font-weight:bold; }
+      .select-cat-primary { background:#FDE1E1; color:#8A1A1A; border-color:#D87979; font-weight:bold; }
+      .select-cat-support { background:#E8EEF4; color:#44515D; border-color:#AAB5C1; font-weight:bold; }
+      .select-ms-done { background:#D4EDDA; color:#2A6A2A; border-color:#79B785; }
+      .select-ms-risk { background:#FFF3CD; color:#8A5A00; border-color:#E4BC4A; }
+      .select-ms-late { background:#FDE1E1; color:#8A1A1A; border-color:#D87979; }
+      .budget-editor { display:grid; grid-template-columns:1fr 1fr; gap:3px; align-items:center; }
+      .budget-editor label { font-size:9px; color:#64748B; display:flex; align-items:center; gap:2px; white-space:nowrap; }
+      .budget-editor .dash-input { width:39px; padding:2px 3px; font-size:10px; text-align:right; }
+      .budget-editor .bar-wrap { grid-column:1 / -1; margin-top:2px; }
+      .budget-note { grid-column:1 / -1; font-size:9px; color:#64748B; line-height:1.2; }
+      .ms-editor { display:flex; flex-direction:column; gap:3px; }
+      .ms-editor .dash-select { font-size:9.5px; }
+      .ms-title { font-size:9.8px; line-height:1.25; color:#415264; }
+      .constraint-editor { display:flex; flex-direction:column; gap:4px; }
+      .constraint-editor .dash-select { max-width:128px; font-size:9.5px; }
+      .constraint-text { width:100%; min-height:39px; resize:vertical; padding:4px 5px; font-size:10px; line-height:1.25; }
+      .auto-rag-note { font-size:9.5px; opacity:.78; margin-top:3px; text-align:right; }
+      .save-message { position:fixed; bottom:18px; right:18px; z-index:99; background:#1F6F3F; color:#fff; padding:9px 13px; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,.2); font-size:11px; opacity:0; transform:translateY(8px); pointer-events:none; transition:all .22s ease; }
+      .save-message.show { opacity:1; transform:translateY(0); }
+      .editable-note { color:#64748B; font-size:10px; font-style:italic; }
+      @media print {
+        @page {
+          size: A4 landscape;
+          margin: 8mm;
+        }
+
+        html, body {
+          width: auto !important;
+          min-width: 0 !important;
+          max-width: none !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          overflow: visible !important;
+        }
+
+        .control-band, .save-message { display:none !important; }
+
+        .sec-title {
+          margin-top: 0 !important;
+          break-after: avoid;
+          page-break-after: avoid;
+        }
+
+        .prog-block {
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow: visible !important;
+          break-inside: auto;
+          page-break-inside: auto;
+        }
+
+        .prog-header {
+          width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) minmax(300px, 48%) !important;
+          gap: 12px !important;
+          align-items: center !important;
+          overflow: visible !important;
+        }
+
+        .prog-header > div:first-child {
+          min-width: 0 !important;
+          overflow: visible !important;
+        }
+
+        .prog-rag-wrap {
+          min-width: 0 !important;
+          width: 100% !important;
+          justify-content: flex-end !important;
+          overflow: visible !important;
+        }
+
+        .rag-breakdown {
+          min-width: 0 !important;
+          max-width: 100% !important;
+          flex-wrap: wrap !important;
+          justify-content: flex-end !important;
+          gap: 5px !important;
+        }
+
+        .rag-mini {
+          white-space: nowrap !important;
+        }
+
+        .prog-rag-label,
+        .prog-rag-wrap > div:last-child {
+          white-space: nowrap !important;
+        }
+
+        .dash-select, .dash-input, .constraint-text {
+          border:0 !important;
+          appearance:none;
+          -webkit-appearance:none;
+          background:transparent !important;
+          color:#1a1a1a !important;
+          padding:0 !important;
+        }
+
+        .constraint-text { min-height:0 !important; resize:none; }
+        .budget-editor { display:block; }
+        .budget-editor .bar-wrap { display:block; margin-top:3px; }
+        .budget-editor label { display:inline; margin-right:6px; }
+        .budget-editor .dash-input { width:30px; }
+        select[name$="-escalation"] { font-weight:bold !important; }
+        .editable-inline { outline:none !important; background:transparent !important; }
+        .editable-inline:empty:before { content:'' !important; }
+        .psn-select:not(.is-psn) { display:none !important; }
+        .psn-select.is-psn {
+          border:1px solid #1B4F8A !important;
+          background:#1B4F8A !important;
+          color:#fff !important;
+        }
+        .row-btn, .add-row-tr { display:none !important; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function el(tag, props, children) {
+    const node = document.createElement(tag);
+    Object.keys(props || {}).forEach((key) => {
+      if (key === 'className') node.className = props[key];
+      else if (key === 'text') node.textContent = props[key];
+      else if (key === 'html') node.innerHTML = props[key];
+      else node.setAttribute(key, props[key]);
+    });
+    (children || []).forEach((child) => node.appendChild(child));
+    return node;
+  }
+
+  function option(select, value, label) {
+    select.appendChild(el('option', { value, text: label }));
+  }
+
+  function makeSelect(kind, value, name) {
+    const select = el('select', { className: 'dash-select', name: name || '' });
+    if (kind === 'category') {
+      option(select, 'Utama', 'Utama');
+      option(select, 'Pendukung', 'Pendukung');
+    } else if (kind === 'rag') {
+      option(select, 'GREEN', 'GREEN');
+      option(select, 'AMBER', 'AMBER');
+      option(select, 'RED', 'RED');
+    } else if (kind === 'trend') {
+      option(select, 'Membaik', '▲ Membaik');
+      option(select, 'Tetap', '● Tetap');
+      option(select, 'Memburuk', '▼ Memburuk');
+    } else if (kind === 'milestone') {
+      option(select, 'Selesai', 'Selesai / Sesuai Jadwal');
+      option(select, 'At Risk', 'At Risk');
+      option(select, 'Terlambat', 'Terlambat');
+      option(select, 'Belum Dimulai', 'Belum Dimulai');
+    } else if (kind === 'escalation') {
+      option(select, 'Tidak Ada', 'Tidak Ada');
+      option(select, 'Pantau', 'Pantau');
+      option(select, 'Eskalasi Direktorat', 'Eskalasi Direktorat');
+      option(select, 'Eskalasi Deputi', 'Eskalasi Deputi');
+    }
+    select.value = value;
+    applySelectStyle(select, kind);
+    select.addEventListener('change', () => {
+      applySelectStyle(select, kind);
+      if (['category', 'rag'].includes(kind)) updatePrograms();
+      saveState();
+    });
+    return select;
+  }
+
+  function applySelectStyle(select, kind) {
+    select.className = 'dash-select';
+    const value = select.value;
+    if (kind === 'rag') select.classList.add('select-rag-' + value.toLowerCase());
+    if (kind === 'category') select.classList.add(value === 'Utama' ? 'select-cat-primary' : 'select-cat-support');
+    if (kind === 'milestone') {
+      select.classList.add(value === 'Terlambat' ? 'select-ms-late' : (value === 'At Risk' ? 'select-ms-risk' : 'select-ms-done'));
+    }
+  }
+
+  function currentRag(td) {
+    const badge = td.querySelector('.rag');
+    if (badge && badge.classList.contains('r')) return 'RED';
+    if (badge && badge.classList.contains('a')) return 'AMBER';
+    return 'GREEN';
+  }
+
+  function currentCategory(td) {
+    return td.textContent.trim().toLowerCase().includes('pendukung') ? 'Pendukung' : 'Utama';
+  }
+
+  function currentTrend(td) {
+    const trend = td.querySelector('.trend');
+    if (trend && trend.classList.contains('up')) return 'Membaik';
+    if (trend && trend.classList.contains('down')) return 'Memburuk';
+    return 'Tetap';
+  }
+
+  function milestoneStatus(pill) {
+    if (pill.classList.contains('late')) return 'Terlambat';
+    if (pill.classList.contains('risk')) return 'At Risk';
+    return 'Selesai';
+  }
+
+  function escalationStatus(td) {
+    const tag = td.querySelector('.tag');
+    if (!tag) return 'Tidak Ada';
+    if (tag.classList.contains('r')) return 'Eskalasi Deputi';
+    if (tag.classList.contains('a')) return 'Pantau';
+    return 'Tidak Ada';
+  }
+
+  function parseBudget(text) {
+    const match = String(text).match(/(\d+(?:[.,]\d+)?)%\s*\(\s*Target:\s*(\d+(?:[.,]\d+)?)%/i);
+    return match ? { actual: match[1].replace(',', '.'), target: match[2].replace(',', '.') } : { actual: '', target: '' };
+  }
+
+  function makeEditableInline(tag, className, text, prefix, fieldKey, placeholder) {
+    const node = el(tag, { className: className, contenteditable: 'true', spellcheck: 'false', 'data-field-name': prefix + '-' + fieldKey, 'data-placeholder': placeholder || '' });
+    node.classList.add('editable-inline');
+    node.textContent = text || '';
+    node.addEventListener('input', saveState);
+    return node;
+  }
+
+  function buildNoCell(number, onDelete) {
+    const td = el('td', { className: 'no' });
+    const wrap = el('span', { className: 'no-wrap' });
+    const noSpan = el('span', { className: 'row-no', text: String(number) });
+    const delBtn = el('button', { className: 'row-btn del-btn', type: 'button', title: 'Hapus proyek ini' });
+    delBtn.textContent = '×';
+    delBtn.addEventListener('click', onDelete);
+    wrap.append(noSpan, delBtn);
+    td.appendChild(wrap);
+    return td;
+  }
+
+  function buildNameCell(prefix, name, kl) {
+    const td = el('td', {});
+    td.appendChild(makeEditableInline('div', 'proj-name', name, prefix, 'nama', 'Nama proyek'));
+    td.appendChild(makeEditableInline('div', 'proj-kl', kl, prefix, 'kl', 'K/L pelaksana'));
+    return td;
+  }
+
+  function buildCategoryCell(prefix, category) {
+    const td = el('td', { className: 'tc' });
+    td.appendChild(makeSelect('category', category, prefix + '-category'));
+    return td;
+  }
+
+  function buildRagCell(prefix, rag) {
+    const td = el('td', { className: 'tc' });
+    td.appendChild(makeSelect('rag', rag, prefix + '-rag'));
+    return td;
+  }
+
+  function buildTrendCell(prefix, trend) {
+    const td = el('td', { className: 'tc' });
+    td.appendChild(makeSelect('trend', trend, prefix + '-trend'));
+    return td;
+  }
+
+  function buildBudgetCell(prefix, actualVal, targetVal) {
+    const td = el('td', {});
+    const budgetBox = el('div', { className: 'budget-editor' });
+    const actual = el('input', { className: 'dash-input', type: 'number', min: '0', max: '100', step: '0.1', value: actualVal, name: prefix + '-actual', 'aria-label': 'Realisasi anggaran tahunan (%)' });
+    const target = el('input', { className: 'dash-input', type: 'number', min: '0', max: '100', step: '0.1', value: targetVal, name: prefix + '-target', 'aria-label': 'Target realisasi anggaran tahunan (%)' });
+    const fill = el('div', { className: 'bar-fill', style: 'width:0%;' });
+    const bar = el('div', { className: 'bar-wrap' }, [fill]);
+    const note = el('div', { className: 'budget-note' });
+    budgetBox.appendChild(el('label', { text: 'Real. ' }, [actual]));
+    budgetBox.appendChild(el('label', { text: 'Target ' }, [target]));
+    budgetBox.appendChild(bar);
+    budgetBox.appendChild(note);
+    function refreshBudget() {
+      const a = Math.min(100, Math.max(0, Number(actual.value) || 0));
+      const t = Math.min(100, Math.max(0, Number(target.value) || 0));
+      const gap = a - t;
+      fill.style.width = a + '%';
+      fill.className = 'bar-fill ' + (gap >= 0 ? 'g' : (gap >= -10 ? 'a' : 'r'));
+      note.textContent = a + '% | Target ' + t + '% | Deviasi ' + (gap > 0 ? '+' : '') + gap.toFixed(1) + ' pp';
+    }
+    actual.addEventListener('input', () => { refreshBudget(); saveState(); });
+    target.addEventListener('input', () => { refreshBudget(); saveState(); });
+    refreshBudget();
+    td.appendChild(budgetBox);
+    return td;
+  }
+
+  function buildMilestoneCell(prefix, milestones) {
+    const td = el('td', {});
+    const milestoneBox = el('div', { className: 'ms-editor' });
+    const list = milestones && milestones.length ? milestones : [{ name: '', status: 'Belum Dimulai' }, { name: '', status: 'Belum Dimulai' }];
+    list.forEach((m, pillIndex) => {
+      const mRow = el('div', { className: 'ms-editor' });
+      mRow.appendChild(makeEditableInline('div', 'ms-title', m.name, prefix, 'ms' + pillIndex + 'title', 'Nama milestone'));
+      mRow.appendChild(makeSelect('milestone', m.status, prefix + '-ms' + pillIndex));
+      milestoneBox.appendChild(mRow);
+    });
+    td.appendChild(milestoneBox);
+    return td;
+  }
+
+  function buildConstraintCell(prefix, escalation, text) {
+    const td = el('td', { className: 'constraint' });
+    const constraintBox = el('div', { className: 'constraint-editor' });
+    constraintBox.appendChild(makeSelect('escalation', escalation, prefix + '-escalation'));
+    const constraintText = el('textarea', { className: 'constraint-text', name: prefix + '-constraint', 'aria-label': 'Kendala dan permintaan intervensi' });
+    constraintText.value = text || '';
+    constraintText.addEventListener('input', saveState);
+    constraintBox.appendChild(constraintText);
+    td.appendChild(constraintBox);
+    return td;
+  }
+
+  function renumberBlock(block) {
+    const rows = Array.from(block.querySelectorAll('tbody tr')).filter((tr) => !tr.classList.contains('add-row-tr'));
+    rows.forEach((tr, i) => {
+      const noSpan = tr.querySelector('.row-no');
+      if (noSpan) noSpan.textContent = String(i + 1);
+    });
+  }
+
+  function addProjectRow(block, blockIndex) {
+    const tbody = block.querySelector('tbody');
+    const addRowTr = block.querySelector('.add-row-tr');
+    const seq = Number(block.getAttribute('data-new-seq') || '0') + 1;
+    block.setAttribute('data-new-seq', String(seq));
+    const prefix = 'p' + blockIndex + '-new' + seq;
+
+    const tr = el('tr', {});
+    const rowsBefore = Array.from(block.querySelectorAll('tbody tr')).filter((t) => !t.classList.contains('add-row-tr'));
+    tr.appendChild(buildNoCell(rowsBefore.length + 1, () => { tr.remove(); renumberBlock(block); updatePrograms(); saveState(); }));
+    tr.appendChild(buildNameCell(prefix, '', ''));
+    tr.appendChild(buildCategoryCell(prefix, 'Pendukung'));
+    tr.appendChild(buildRagCell(prefix, 'GREEN'));
+    tr.appendChild(buildTrendCell(prefix, 'Tetap'));
+    tr.appendChild(buildBudgetCell(prefix, '', ''));
+    tr.appendChild(buildMilestoneCell(prefix, []));
+    tr.appendChild(buildConstraintCell(prefix, 'Tidak Ada', ''));
+
+    tbody.insertBefore(tr, addRowTr);
+    updatePrograms();
+    saveState();
+  }
+
+  function convertRows() {
+    document.querySelectorAll('.prog-block').forEach((block, blockIndex) => {
+      const rows = Array.from(block.querySelectorAll('tbody tr'));
+      rows.forEach((row, rowIndex) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 8) return;
+        const prefix = 'p' + blockIndex + '-r' + rowIndex;
+
+        const name = (cells[1].querySelector('.proj-name') || {}).textContent || '';
+        const kl = (cells[1].querySelector('.proj-kl') || {}).textContent || '';
+        const category = currentCategory(cells[2]);
+        const rag = currentRag(cells[3]);
+        const trend = currentTrend(cells[4]);
+        const budget = parseBudget(cells[5].textContent);
+        const pills = Array.from(cells[6].querySelectorAll('.ms-pill'));
+        const milestones = pills.map((pill) => ({
+          name: pill.textContent.replace(/\s+—\s+(Terlambat|At Risk|Selesai|Aktif)$/i, '').trim(),
+          status: milestoneStatus(pill)
+        }));
+        const escalation = escalationStatus(cells[7]);
+        const constraint = cells[7].textContent.replace(/^(ESKALASI|PANTAU|OK)\s*/i, '').trim();
+
+        row.innerHTML = '';
+        row.appendChild(buildNoCell(rowIndex + 1, () => { row.remove(); renumberBlock(block); updatePrograms(); saveState(); }));
+        row.appendChild(buildNameCell(prefix, name, kl));
+        row.appendChild(buildCategoryCell(prefix, category));
+        row.appendChild(buildRagCell(prefix, rag));
+        row.appendChild(buildTrendCell(prefix, trend));
+        row.appendChild(buildBudgetCell(prefix, budget.actual, budget.target));
+        row.appendChild(buildMilestoneCell(prefix, milestones));
+        row.appendChild(buildConstraintCell(prefix, escalation, constraint));
+      });
+
+      const tbody = block.querySelector('tbody');
+      const addRowTr = el('tr', { className: 'add-row-tr' });
+      const addTd = el('td', { colspan: '8' });
+      const addBtn = el('button', { className: 'add-row-btn', type: 'button', text: '+ Tambah Proyek' });
+      addBtn.addEventListener('click', () => addProjectRow(block, blockIndex));
+      addTd.appendChild(addBtn);
+      addRowTr.appendChild(addTd);
+      tbody.appendChild(addRowTr);
+    });
+  }
+
+  function updatePrograms() {
+    const programStatuses = [];
+    document.querySelectorAll('.prog-block').forEach((block) => {
+      const rows = Array.from(block.querySelectorAll('tbody tr')).filter((tr) => !tr.classList.contains('add-row-tr'));
+      const projects = rows.map((row) => ({
+        category: row.querySelector('select[name$="-category"]')?.value,
+        rag: row.querySelector('select[name$="-rag"]')?.value
+      }));
+      const primary = projects.filter((p) => p.category === 'Utama');
+      let rag = 'GREEN';
+      if (primary.some((p) => p.rag === 'RED')) rag = 'RED';
+      else if (primary.some((p) => p.rag === 'AMBER')) rag = 'AMBER';
+      if (!primary.length) rag = 'AMBER';
+      programStatuses.push(rag);
+
+      const headerBadge = block.querySelector('.prog-rag-wrap .rag');
+      if (headerBadge) {
+        headerBadge.className = 'rag ' + (rag === 'GREEN' ? 'g' : rag === 'AMBER' ? 'a' : 'r');
+        headerBadge.textContent = RAG_LABEL[rag];
+      }
+      const breakdown = block.querySelector('.rag-breakdown');
+      if (breakdown) {
+        const counts = { 'Utama-GREEN': 0, 'Utama-AMBER': 0, 'Utama-RED': 0, 'Pendukung-GREEN': 0, 'Pendukung-AMBER': 0, 'Pendukung-RED': 0 };
+        projects.forEach((p) => { if (counts[p.category + '-' + p.rag] !== undefined) counts[p.category + '-' + p.rag]++; });
+        const parts = [];
+        ['RED', 'AMBER', 'GREEN'].forEach((color) => {
+          const n = counts['Utama-' + color];
+          if (n) parts.push('<div class="rag-mini"><div class="dot ' + (color === 'GREEN' ? 'g' : color === 'AMBER' ? 'a' : 'r') + '"></div>' + n + ' Utama ' + color + '</div>');
+        });
+        ['RED', 'AMBER', 'GREEN'].forEach((color) => {
+          const n = counts['Pendukung-' + color];
+          if (n) parts.push('<div class="rag-mini"><div class="dot ' + (color === 'GREEN' ? 'g' : color === 'AMBER' ? 'a' : 'r') + '"></div>' + n + ' Pendukung ' + color + '</div>');
+        });
+        breakdown.innerHTML = parts.join('');
+      }
+    });
+
+    const summary = { RED: 0, AMBER: 0, GREEN: 0 };
+    programStatuses.forEach((status) => summary[status]++);
+    const mapping = { RED: 'red', AMBER: 'amber', GREEN: 'green' };
+    Object.keys(mapping).forEach((status) => {
+      const card = document.querySelector('.sum-card.' + mapping[status]);
+      if (card) {
+        const num = card.querySelector('.num');
+        const desc = card.querySelector('.desc');
+        if (num) num.textContent = summary[status];
+        if (desc) {
+          const pct = programStatuses.length ? Math.round((summary[status] / programStatuses.length) * 100) : 0;
+          const strong = desc.querySelector('strong');
+          const label = status === 'RED' ? 'Off Track' : status === 'AMBER' ? 'At Risk' : 'On Track';
+          if (strong) strong.textContent = label;
+          desc.lastChild.textContent = pct + '% program';
+        }
+      }
+    });
+  }
+
+  function collectProjectState() {
+    return Array.from(document.querySelectorAll('.prog-block')).map((block) => {
+      const rows = Array.from(block.querySelectorAll('tbody tr')).filter((tr) => !tr.classList.contains('add-row-tr'));
+      return rows.map((row) => {
+        const getText = (selector) => {
+          const node = row.querySelector(selector);
+          return node ? node.textContent : '';
+        };
+        const getValue = (selector) => {
+          const node = row.querySelector(selector);
+          return node ? node.value : '';
+        };
+
+        const milestoneTitles = Array.from(row.querySelectorAll('.ms-title'));
+        const milestoneSelects = Array.from(row.querySelectorAll('select[name*="-ms"]'));
+        const milestones = milestoneTitles.map((title, index) => ({
+          name: title.textContent.trim(),
+          status: milestoneSelects[index] ? milestoneSelects[index].value : 'Belum Dimulai'
+        }));
+
+        return {
+          name: getText('.proj-name').trim(),
+          kl: getText('.proj-kl').trim(),
+          category: getValue('select[name$="-category"]') || 'Pendukung',
+          rag: getValue('select[name$="-rag"]') || 'GREEN',
+          trend: getValue('select[name$="-trend"]') || 'Tetap',
+          actual: getValue('input[name$="-actual"]'),
+          target: getValue('input[name$="-target"]'),
+          milestones,
+          escalation: getValue('select[name$="-escalation"]') || 'Tidak Ada',
+          constraint: getValue('textarea[name$="-constraint"]')
+        };
+      });
+    });
+  }
+
+  function restoreProjectState(projectsByProgram) {
+    if (!Array.isArray(projectsByProgram)) return;
+
+    document.querySelectorAll('.prog-block').forEach((block, blockIndex) => {
+      const entry = projectsByProgram[blockIndex];
+      const savedRows = entry && Array.isArray(entry.rows) ? entry.rows : (Array.isArray(entry) ? entry : []);
+      const tbody = block.querySelector('tbody');
+      if (!tbody) return;
+
+      Array.from(tbody.querySelectorAll('tr')).filter((tr) => !tr.classList.contains('add-row-tr')).forEach((tr) => tr.remove());
+
+      const addRowTr = tbody.querySelector('.add-row-tr');
+      savedRows.forEach((project, rowIndex) => {
+        const prefix = 'p' + blockIndex + '-saved' + (rowIndex + 1);
+        const tr = el('tr', {});
+
+        tr.appendChild(buildNoCell(rowIndex + 1, () => {
+          tr.remove();
+          renumberBlock(block);
+          updatePrograms();
+          saveState();
+        }));
+        tr.appendChild(buildNameCell(prefix, project.name || '', project.kl || ''));
+        tr.appendChild(buildCategoryCell(prefix, project.category || 'Pendukung'));
+        tr.appendChild(buildRagCell(prefix, project.rag || 'GREEN'));
+        tr.appendChild(buildTrendCell(prefix, project.trend || 'Tetap'));
+        tr.appendChild(buildBudgetCell(prefix, project.actual ?? '', project.target ?? ''));
+        tr.appendChild(buildMilestoneCell(prefix, Array.isArray(project.milestones) ? project.milestones : []));
+        tr.appendChild(buildConstraintCell(prefix, project.escalation || 'Tidak Ada', project.constraint || ''));
+
+        if (addRowTr) tbody.insertBefore(tr, addRowTr);
+        else tbody.appendChild(tr);
+      });
+
+      block.setAttribute('data-new-seq', String(savedRows.length));
+      renumberBlock(block);
+    });
+  }
+
+  let isApplyingRemote = false;
+  let remoteSaveTimer = null;
+  let pendingRemoteData = null;
+
+  function collectState() {
+    const data = {};
+
+    document.querySelectorAll('input[name], select[name], textarea[name]').forEach((field) => {
+      data[field.name] = field.value;
+    });
+
+    document.querySelectorAll('[data-field-name]').forEach((field) => {
+      data[field.getAttribute('data-field-name')] = field.textContent;
+    });
+
+    // Simpan juga struktur baris proyek agar proyek yang dihapus/tambah tetap sama setelah reload.
+    // Dibungkus jadi { rows: [...] } per program karena Firestore tidak mendukung array-di-dalam-array secara langsung.
+    data.__projects = collectProjectState().map((rows) => ({ rows }));
+
+    return data;
+  }
+
+  function saveState() {
+    if (isApplyingRemote) return; // jangan simpan ulang saat sedang menerapkan data dari pengguna lain
+
+    const data = collectState();
+
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(data));
+      showMessage('Tersimpan otomatis');
+    } catch (e) {
+      console.warn('State dashboard tidak dapat disimpan.', e);
+    }
+
+    // Kirim ke Firebase dengan sedikit jeda (debounce) supaya ketikan cepat
+    // tidak memicu puluhan penulisan; tetap dijadwalkan ulang setiap ada perubahan baru.
+    if (window.fbReady && typeof window.fbSaveState === 'function') {
+      clearTimeout(remoteSaveTimer);
+      remoteSaveTimer = setTimeout(() => window.fbSaveState(data), 600);
+    }
+  }
+
+  function isEditingActive() {
+    const ae = document.activeElement;
+    if (!ae) return false;
+    return ae.matches('input, textarea, select, [contenteditable="true"]');
+  }
+
+  // Menerapkan sebuah objek state (dari localStorage ATAU dari Firebase) ke tampilan.
+  function applyState(data) {
+    isApplyingRemote = true;
+    try {
+      // Restore struktur proyek terlebih dahulu, termasuk baris yang ditambah/dihapus.
+      if (Array.isArray(data.__projects)) {
+        restoreProjectState(data.__projects);
+      }
+
+      Object.entries(data).forEach(([name, value]) => {
+        if (name === '__projects' || name === '__updatedAt') return;
+
+        // Data proyek sudah dipulihkan dari __projects; jangan menimpa dengan
+        // key proyek lama yang mungkin menunjuk ke baris yang sudah dihapus.
+        if (/^p\\d+-(?:r\\d+|new\\d+|saved\\d+)/.test(name)) return;
+
+        const field = document.querySelector('[name="' + CSS.escape(name) + '"]');
+        if (field) {
+          field.value = value;
+          if (field.tagName === 'SELECT') {
+            if (field.classList.contains('psn-select')) {
+              if (value === 'PSN') field.classList.add('is-psn');
+              else field.classList.remove('is-psn');
+            } else {
+              const kind = name.includes('-rag') ? 'rag' : name.includes('-category') ? 'category' : name.includes('-ms') ? 'milestone' : (name.includes('-trend') ? 'trend' : 'escalation');
+              applySelectStyle(field, kind);
+            }
+          }
+          return;
+        }
+
+        const editableField = document.querySelector('[data-field-name="' + CSS.escape(name) + '"]');
+        if (editableField) {
+          editableField.textContent = value;
+        }
+      });
+
+      updatePrograms();
+    } finally {
+      isApplyingRemote = false;
+    }
+  }
+
+  function restoreState() {
+    try {
+      const data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      applyState(data);
+    } catch (e) {
+      console.warn('State dashboard tidak dapat dipulihkan.', e);
+    }
+  }
+
+  // Dipanggil setiap ada perubahan dari pengguna lain (lewat Firebase real-time listener).
+  function handleRemoteSnapshot(data) {
+    if (!data) return;
+
+    // Kalau pengguna ini sedang aktif mengetik/memilih sesuatu, tunda dulu penerapan
+    // data dari orang lain supaya tidak merebut fokus/kursor di tengah ketikan.
+    if (isEditingActive()) {
+      pendingRemoteData = data;
+      return;
+    }
+
+    pendingRemoteData = null;
+    applyState(data);
+  }
+
+  // Begitu pengguna selesai mengedit (blur), terapkan update dari orang lain yang tertunda.
+  document.addEventListener('blur', () => {
+    if (pendingRemoteData && !isEditingActive()) {
+      const data = pendingRemoteData;
+      pendingRemoteData = null;
+      applyState(data);
+    }
+  }, true);
+
+  function showMessage(text) {
+    const toast = document.querySelector('.save-message');
+    if (!toast) return;
+    toast.textContent = text;
+    toast.classList.add('show');
+    window.clearTimeout(showMessage.timer);
+    showMessage.timer = window.setTimeout(() => toast.classList.remove('show'), 1200);
+  }
+
+  function autosizePeriodInput(input) {
+    const chars = Math.max(input.value.length, input.placeholder ? input.placeholder.length : 0);
+    input.style.width = Math.max(6, chars + 1) + 'ch';
+  }
+
+  function setupAutoSaveListeners() {
+    document.querySelectorAll('.psn-select').forEach((select) => {
+      select.addEventListener('change', (e) => {
+        if (e.target.value === 'PSN') {
+          e.target.classList.add('is-psn');
+        } else {
+          e.target.classList.remove('is-psn');
+        }
+        saveState();
+      });
+    });
+
+    document.addEventListener('input', (e) => {
+      if (e.target.matches('input, textarea, [contenteditable="true"]')) {
+        saveState();
+      }
+    });
+
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('select, input[type="checkbox"], input[type="radio"]')) {
+        saveState();
+      }
+    });
+
+    // Pastikan perubahan terakhir tetap tersimpan saat halaman direload/ditutup.
+    window.addEventListener('beforeunload', () => {
+      try { saveState(); } catch (e) {}
+    });
+  }
+
+  function createControls() {
+    const top = document.querySelector('.top-header');
+    const controls = el('div', { className: 'control-band' });
+    controls.innerHTML = '<div><strong>Mode Isian Interaktif:</strong> Perbarui status proyek melalui drop-down. <span class="editable-note">Perubahan akan langsung tersimpan secara otomatis.</span></div>';
+    const actions = el('div', { className: 'control-actions' });
+    const save = el('button', { className: 'ctl-btn primary', type: 'button', text: 'Simpan Isian' });
+    save.addEventListener('click', saveState);
+    const exportBtn = el('button', { className: 'ctl-btn', type: 'button', text: 'Unduh Data JSON' });
+    exportBtn.addEventListener('click', () => {
+      const data = {};
+      document.querySelectorAll('input[name], select[name], textarea[name]').forEach((field) => { data[field.name] = field.value; });
+      document.querySelectorAll('[data-field-name]').forEach((field) => { data[field.getAttribute('data-field-name')] = field.textContent; });
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = (window.location.pathname.split('/').pop() || 'dashboard').replace('.html', '_isian.json');
+      link.click(); URL.revokeObjectURL(link.href);
+    });
+    const printBtn = el('button', { className: 'ctl-btn', type: 'button', text: 'Cetak / Simpan PDF' });
+    printBtn.addEventListener('click', () => window.print());
+    actions.append(save, exportBtn, printBtn);
+    controls.appendChild(actions);
+    top.insertAdjacentElement('afterend', controls);
+
+    const period = document.querySelector('.period-inline .val');
+    if (period) {
+      const input = el('input', { className: 'period-edit', type: 'text', value: period.textContent.trim(), name: 'periode_laporan', 'aria-label': 'Periode pelaporan' });
+      input.addEventListener('input', () => { autosizePeriodInput(input); saveState(); });
+      period.replaceWith(input);
+      autosizePeriodInput(input);
+    }
+
+    document.body.appendChild(el('div', { className: 'save-message', text: '' }));
+  }
+
+  function init() {
+    injectStyles();
+    convertRows();
+    createControls();
+    setupAutoSaveListeners();
+    restoreState(); // tampilkan dulu versi tersimpan lokal (langsung, tanpa menunggu jaringan)
+    updatePrograms();
+    const periodInput = document.querySelector('.period-edit');
+    if (periodInput) autosizePeriodInput(periodInput);
+
+    // Sambungkan ke Firebase untuk sinkronisasi real-time antar pengguna, kalau tersedia.
+    if (window.fbReady && typeof window.fbSubscribe === 'function') {
+      window.fbSubscribe(handleRemoteSnapshot);
+    } else {
+      window.addEventListener('load', () => {
+        if (window.fbReady && typeof window.fbSubscribe === 'function') {
+          window.fbSubscribe(handleRemoteSnapshot);
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>
