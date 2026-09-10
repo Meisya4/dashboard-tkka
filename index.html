@@ -336,6 +336,15 @@ body {
   background: #153E6D;
   border-color: #1B4F8A;
 }
+.psn-select.is-pkpn {
+  background: #1B7A3D;
+  color: #fff;
+  border-color: #1B7A3D;
+}
+.psn-select.is-pkpn:hover {
+  background: #145C2E;
+  border-color: #1B7A3D;
+}
 .psn-select option {
   background: #ffffff;
   color: #1a1a1a;
@@ -447,6 +456,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         <select class="psn-select is-psn" name="p0-psn">
           <option value="">NON</option>
           <option value="PSN" selected>PSN</option>
+          <option value="PKPN">PKPN</option>
         </select>
       </div>
       <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p0-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 1.113 T | Target: 100 GW kapasitas PLTS 2029">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 1.113 T &nbsp;|&nbsp; Target: 100 GW kapasitas PLTS 2029</div>
@@ -538,6 +548,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         <select class="psn-select" name="p1-psn">
           <option value="" selected>Non</option>
           <option value="PSN">PSN</option>
+          <option value="PKPN">PKPN</option>
         </select>
       </div>
       <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p1-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 58,39 T | Target: Rasio elektrifikasi 100%">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 58,39 T &nbsp;|&nbsp; Target: Rasio elektrifikasi 100%</div>
@@ -609,6 +620,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         <select class="psn-select" name="p2-psn">
           <option value="" selected>Non</option>
           <option value="PSN">PSN</option>
+          <option value="PKPN">PKPN</option>
         </select>
       </div>
       <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p2-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 27,86 T | Target: 15 Juta unit konversi">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 27,86 T &nbsp;|&nbsp; Target: 15 Juta unit konversi</div>
@@ -680,6 +692,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         <select class="psn-select" name="p3-psn">
           <option value="" selected>Non</option>
           <option value="PSN">PSN</option>
+          <option value="PKPN">PKPN</option>
         </select>
       </div>
       <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p3-meta" data-placeholder="K/L Utama: KESDM / PLN | Anggaran: Rp 25,88 T | Target: 5.000 MW kapasitas PLTA baru">K/L Utama: KESDM / PLN &nbsp;|&nbsp; Anggaran: Rp 25,88 T &nbsp;|&nbsp; Target: 5.000 MW kapasitas PLTA baru</div>
@@ -751,6 +764,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         <select class="psn-select is-psn" name="p4-psn">
           <option value="">Non</option>
           <option value="PSN" selected>PSN</option>
+          <option value="PKPN">PKPN</option>
         </select>
       </div>
       <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p4-meta" data-placeholder="K/L Utama: KESDM / Pertamina | Anggaran: Rp 13 T | Target: 3 kilang hijau beroperasi">K/L Utama: KESDM / Pertamina &nbsp;|&nbsp; Anggaran: Rp 13 T &nbsp;|&nbsp; Target: 3 kilang hijau beroperasi</div>
@@ -822,6 +836,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         <select class="psn-select is-psn" name="p5-psn">
           <option value="">Non</option>
           <option value="PSN" selected>PSN</option>
+          <option value="PKPN">PKPN</option>
         </select>
       </div>
       <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p5-meta" data-placeholder="K/L Utama: KESDM | Anggaran: Rp 10,04 T | Target: 1 Juta sambungan rumah gas">K/L Utama: KESDM &nbsp;|&nbsp; Anggaran: Rp 10,04 T &nbsp;|&nbsp; Target: 1 Juta sambungan rumah gas</div>
@@ -893,6 +908,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         <select class="psn-select" name="p6-psn">
           <option value="" selected>Non</option>
           <option value="PSN">PSN</option>
+          <option value="PKPN">PKPN</option>
         </select>
       </div>
       <div class="prog-meta editable-inline" contenteditable="true" data-field-name="p6-meta" data-placeholder="K/L Utama: KESDM / Kemenperin | Anggaran: Rp 8,96 T | Target: 1 Juta unit motor terkonversi">K/L Utama: KESDM / Kemenperin &nbsp;|&nbsp; Anggaran: Rp 8,96 T &nbsp;|&nbsp; Target: 1 Juta unit motor terkonversi</div>
@@ -1163,10 +1179,15 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
         select[name$="-escalation"] { font-weight:bold !important; }
         .editable-inline { outline:none !important; background:transparent !important; }
         .editable-inline:empty:before { content:'' !important; }
-        .psn-select:not(.is-psn) { display:none !important; }
+        .psn-select:not(.is-psn):not(.is-pkpn) { display:none !important; }
         .psn-select.is-psn {
           border:1px solid #1B4F8A !important;
           background:#1B4F8A !important;
+          color:#fff !important;
+        }
+        .psn-select.is-pkpn {
+          border:1px solid #1B7A3D !important;
+          background:#1B7A3D !important;
           color:#fff !important;
         }
         .row-btn, .add-row-tr { display:none !important; }
@@ -1646,8 +1667,9 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
           field.value = value;
           if (field.tagName === 'SELECT') {
             if (field.classList.contains('psn-select')) {
+              field.classList.remove('is-psn', 'is-pkpn');
               if (value === 'PSN') field.classList.add('is-psn');
-              else field.classList.remove('is-psn');
+              else if (value === 'PKPN') field.classList.add('is-pkpn');
             } else {
               const kind = name.includes('-rag') ? 'rag' : name.includes('-category') ? 'category' : name.includes('-ms') ? 'milestone' : (name.includes('-trend') ? 'trend' : 'escalation');
               applySelectStyle(field, kind);
@@ -1718,10 +1740,11 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
   function setupAutoSaveListeners() {
     document.querySelectorAll('.psn-select').forEach((select) => {
       select.addEventListener('change', (e) => {
+        e.target.classList.remove('is-psn', 'is-pkpn');
         if (e.target.value === 'PSN') {
           e.target.classList.add('is-psn');
-        } else {
-          e.target.classList.remove('is-psn');
+        } else if (e.target.value === 'PKPN') {
+          e.target.classList.add('is-pkpn');
         }
         saveState();
       });
