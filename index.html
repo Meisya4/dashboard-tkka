@@ -167,6 +167,14 @@ body {
 .proj-name { font-weight: bold; font-size: 12px; color: #1a1a1a; }
 .proj-kl   { font-size: 10.5px; color: #777; margin-top: 1px; }
 
+/* nama proyek & K/L pelaksana harus selalu tersusun atas-bawah, bukan
+   inline-block seperti field editable-inline lainnya (lihat aturan di bawah) */
+.proj-name.editable-inline,
+.proj-kl.editable-inline {
+  display: block;
+  width: 100%;
+}
+
 /* editable inline fields */
 [contenteditable="true"].editable-inline {
   outline: none;
@@ -205,7 +213,7 @@ body {
 }
 
 /* baris nomor + tombol hapus proyek */
-.no-wrap { display: inline-flex; align-items: center; gap: 3px; justify-content: center; width: 100%; }
+.no-wrap { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; justify-content: center; width: 100%; }
 .row-btn {
   border: 1px solid #C0392B;
   background: #fff;
@@ -385,6 +393,62 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 .insight-box strong { color: var(--dir-color, #1B4F8A); }
+
+/* Area teks Insight/Agenda yang bisa diformat bebas */
+.rich-editable {
+  outline: none;
+  cursor: text;
+  border-radius: 3px;
+  padding: 3px 4px;
+  margin: -3px -4px;
+}
+.rich-editable:hover {
+  background: rgba(27,79,138,0.06);
+}
+.rich-editable:focus {
+  background: #FFFDF2;
+  outline: 1px dashed #B7C7D8;
+}
+.rich-editable font[size="2"] { font-size: 11px; }
+.rich-editable font[size="3"] { font-size: 13px; }
+.rich-editable font[size="5"] { font-size: 17px; }
+.rich-editable font[size="7"] { font-size: 22px; }
+
+/* Toolbar format mengambang: cuma muncul saat sedang aktif mengedit */
+.rich-toolbar {
+  position: absolute;
+  display: none;
+  align-items: center;
+  gap: 4px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  padding: 5px 6px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+  z-index: 999;
+}
+.rich-toolbar.show { display: flex; }
+.rich-toolbar button {
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rich-toolbar button:hover { background: rgba(255,255,255,0.18); }
+.rich-toolbar .rt-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.25); margin: 0 2px; }
+.rich-toolbar select {
+  background: #2a2a2a; color: #fff; border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 4px; font-size: 11px; padding: 2px 4px; cursor: pointer;
+}
+.rich-toolbar input[type="color"] {
+  width: 22px; height: 22px; border: none; background: none; padding: 0; cursor: pointer;
+}
 
 /* ── LEGEND ─────────────────────────────── */
 .legend {
@@ -1006,9 +1070,9 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
 </div>
 
 <div class="insight-box">
-  <strong>⚡ Insight Direktorat TKKA:</strong> Direktorat ini menanggung beban terberat di portofolio PKPN dengan 7 program dan anggaran ~Rp 1.241 T. Program PLTS 100GW (Rp 1.113 T — 90% anggaran direktorat) dan Konversi Motor Listrik berstatus RED dan memerlukan intervensi Deputi segera, terutama terkait regulasi Kemenkeu (tarif feed-in, insentif fiskal). Green Refinery menjadi satu-satunya program yang berjalan dengan baik.
+  <div class="rich-editable" contenteditable="true" data-field-name="insight-text" data-rich="html"><strong>⚡ Insight Direktorat TKKA:</strong> Direktorat ini menanggung beban terberat di portofolio PKPN dengan 7 program dan anggaran ~Rp 1.241 T. Program PLTS 100GW (Rp 1.113 T — 90% anggaran direktorat) dan Konversi Motor Listrik berstatus RED dan memerlukan intervensi Deputi segera, terutama terkait regulasi Kemenkeu (tarif feed-in, insentif fiskal). Green Refinery menjadi satu-satunya program yang berjalan dengan baik.
   <br><br>
-  <strong>📋 Agenda Klinik Kesiapan:</strong> (1) Regulasi tarif feed-in PLTS — koordinasi KESDM &amp; Kemenkeu &nbsp;|&nbsp; (2) Insentif fiskal Konversi Motor Listrik — Kemenperin &amp; Kemenkeu &nbsp;|&nbsp; (3) Izin kawasan hutan PLTA Batang Toru — KLHK &nbsp;|&nbsp; (4) Izin galian Jargas — Kemendagri
+  <strong>📋 Agenda Klinik Kesiapan:</strong> (1) Regulasi tarif feed-in PLTS — koordinasi KESDM &amp; Kemenkeu &nbsp;|&nbsp; (2) Insentif fiskal Konversi Motor Listrik — Kemenperin &amp; Kemenkeu &nbsp;|&nbsp; (3) Izin kawasan hutan PLTA Batang Toru — KLHK &nbsp;|&nbsp; (4) Izin galian Jargas — Kemendagri</div>
 </div>
 
 <div class="legend">
@@ -1121,7 +1185,8 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
       .ms-title { font-size:9.8px; line-height:1.25; color:#415264; }
       .constraint-editor { display:flex; flex-direction:column; gap:4px; }
       .constraint-editor .dash-select { max-width:128px; font-size:9.5px; }
-      .constraint-text { width:100%; min-height:39px; resize:vertical; padding:4px 5px; font-size:10px; line-height:1.25; }
+      .constraint-text { width:100%; min-height:39px; resize:vertical; padding:4px 5px; font-size:10px; line-height:1.25; overflow:hidden; }
+      .constraint-print { display:none; white-space:pre-wrap; word-break:break-word; font-size:10px; line-height:1.25; }
       .auto-rag-note { font-size:9.5px; opacity:.78; margin-top:3px; text-align:right; }
       .save-message { position:fixed; bottom:18px; right:18px; z-index:99; background:#1F6F3F; color:#fff; padding:9px 13px; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,.2); font-size:11px; opacity:0; transform:translateY(8px); pointer-events:none; transition:all .22s ease; }
       .save-message.show { opacity:1; transform:translateY(0); }
@@ -1206,7 +1271,8 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
           padding:0 !important;
         }
 
-        .constraint-text { min-height:0 !important; resize:none; }
+        .constraint-text { display:none !important; }
+        .constraint-print { display:block !important; color:#1a1a1a !important; }
         .budget-editor { display:block; }
         .budget-editor .bar-wrap { display:block; margin-top:3px; }
         .budget-editor label { display:inline; margin-right:6px; }
@@ -1226,6 +1292,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
           color:#fff !important;
         }
         .row-btn, .add-row-tr { display:none !important; }
+        .rich-toolbar { display:none !important; }
       }
     `;
     document.head.appendChild(style);
@@ -1414,16 +1481,38 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
     return td;
   }
 
+  function autosizeConstraintText(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.max(39, textarea.scrollHeight) + 'px';
+  }
+
   function buildConstraintCell(prefix, escalation, text) {
     const td = el('td', { className: 'constraint' });
     const constraintBox = el('div', { className: 'constraint-editor' });
     constraintBox.appendChild(makeSelect('escalation', escalation, prefix + '-escalation'));
     const constraintText = el('textarea', { className: 'constraint-text', name: prefix + '-constraint', 'aria-label': 'Kendala dan permintaan intervensi' });
     constraintText.value = text || '';
-    constraintText.addEventListener('input', saveState);
+    const constraintPrint = el('div', { className: 'constraint-print', text: text || '' });
+    constraintText.addEventListener('input', () => {
+      autosizeConstraintText(constraintText);
+      constraintPrint.textContent = constraintText.value;
+      saveState();
+    });
     constraintBox.appendChild(constraintText);
+    constraintBox.appendChild(constraintPrint);
     td.appendChild(constraintBox);
+    requestAnimationFrame(() => autosizeConstraintText(constraintText));
     return td;
+  }
+
+  // Setelah data dimuat/disinkronkan (lokal atau dari Firebase), pastikan kotak kendala
+  // selalu setinggi isinya dan versi cetaknya (constraint-print) tetap sinkron dengan textarea.
+  function syncConstraintBoxes() {
+    document.querySelectorAll('.constraint-text').forEach((textarea) => {
+      autosizeConstraintText(textarea);
+      const printMirror = textarea.parentElement ? textarea.parentElement.querySelector('.constraint-print') : null;
+      if (printMirror) printMirror.textContent = textarea.value;
+    });
   }
 
   function renumberBlock(block) {
@@ -1653,7 +1742,8 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
     });
 
     document.querySelectorAll('[data-field-name]').forEach((field) => {
-      data[field.getAttribute('data-field-name')] = field.textContent;
+      const key = field.getAttribute('data-field-name');
+      data[key] = field.hasAttribute('data-rich') ? field.innerHTML : field.textContent;
     });
 
     // Simpan juga struktur baris proyek agar proyek yang dihapus/tambah tetap sama setelah reload.
@@ -1734,11 +1824,16 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
 
         const editableField = document.querySelector('[data-field-name="' + CSS.escape(name) + '"]');
         if (editableField) {
-          editableField.textContent = value;
+          if (editableField.hasAttribute('data-rich')) {
+            editableField.innerHTML = value;
+          } else {
+            editableField.textContent = value;
+          }
         }
       });
 
       updatePrograms();
+      syncConstraintBoxes();
     } finally {
       isApplyingRemote = false;
     }
@@ -1795,6 +1890,180 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
     input.style.width = Math.max(6, chars + 1) + 'ch';
   }
 
+  function setupRichTextEditing() {
+    const richFields = document.querySelectorAll('.rich-editable');
+    if (!richFields.length) return;
+
+    const toolbar = el('div', { className: 'rich-toolbar' });
+    toolbar.innerHTML =
+      '<button type="button" data-cmd="bold" title="Tebal"><b>B</b></button>' +
+      '<button type="button" data-cmd="italic" title="Miring"><i>I</i></button>' +
+      '<div class="rt-sep"></div>' +
+      '<input type="color" data-cmd="foreColor" title="Warna teks" value="#1a1a1a">' +
+      '<div class="rt-sep"></div>' +
+      '<select data-cmd="fontSize" title="Ukuran teks">' +
+      '<option value="2">Kecil</option>' +
+      '<option value="3" selected>Normal</option>' +
+      '<option value="5">Besar</option>' +
+      '<option value="7">Sangat Besar</option>' +
+      '</select>';
+    document.body.appendChild(toolbar);
+
+    let activeEditable = null;
+    let savedRange = null;
+
+    function positionToolbar(target) {
+      const rect = target.getBoundingClientRect();
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const scrollX = window.scrollX || document.documentElement.scrollLeft;
+      let top = rect.top + scrollY - toolbar.offsetHeight - 8;
+      if (rect.top - toolbar.offsetHeight - 8 < 0) {
+        top = rect.bottom + scrollY + 8; // kalau kepotong di atas layar, taruh di bawah
+      }
+      toolbar.style.top = top + 'px';
+      toolbar.style.left = Math.max(4, rect.left + scrollX) + 'px';
+    }
+
+    function showToolbar(target) {
+      activeEditable = target;
+      toolbar.classList.add('show');
+      positionToolbar(target);
+    }
+
+    function hideToolbar() {
+      toolbar.classList.remove('show');
+      activeEditable = null;
+      savedRange = null;
+    }
+
+    function restoreSelection() {
+      if (!activeEditable || !savedRange) return;
+      activeEditable.focus();
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    }
+
+    let activeStyleSpan = null;
+
+    function rangeMatchesSpanContents(range, span) {
+      if (!span || !span.isConnected) return false;
+      try {
+        const spanRange = document.createRange();
+        spanRange.selectNodeContents(span);
+        return (
+          range.startContainer === spanRange.startContainer &&
+          range.startOffset === spanRange.startOffset &&
+          range.endContainer === spanRange.endContainer &&
+          range.endOffset === spanRange.endOffset
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // Terapkan style CSS langsung ke teks yang diseleksi dengan membungkusnya dalam <span>.
+    // Tidak bergantung pada document.execCommand, jadi tetap bekerja meski fokus sempat
+    // pindah ke kontrol toolbar (mis. color picker) sebelum diterapkan.
+    function applyInlineStyle(styleProp, styleValue, opts) {
+      // opts.silent = true dipakai saat menggeser color picker: kita HARUS tidak
+      // memindahkan fokus balik ke field, karena memindah fokus di tengah drag
+      // akan langsung menutup jendela color picker bawaan browser, sehingga
+      // hanya perubahan warna pertama yang kepakai dan sisanya diabaikan.
+      opts = opts || {};
+      if (!activeEditable || !savedRange) return;
+
+      // Kalau kontrol yang sama (mis. drag di palet warna) memicu event berkali-kali
+      // untuk seleksi yang SAMA, cukup update span yang sudah ada—jangan bungkus lagi,
+      // supaya tidak numpuk <span> di dalam <span> yang bikin warna lama tetap "menang".
+      if (activeStyleSpan && rangeMatchesSpanContents(savedRange, activeStyleSpan)) {
+        activeStyleSpan.style[styleProp] = styleValue;
+        if (!opts.silent) activeEditable.focus();
+        saveState();
+        return;
+      }
+
+      const range = savedRange.cloneRange();
+      if (range.collapsed) return; // tidak ada teks yang diseleksi, tidak ada yang bisa diformat
+
+      const span = document.createElement('span');
+      span.style[styleProp] = styleValue;
+      try {
+        range.surroundContents(span);
+      } catch (e) {
+        // Seleksi memotong beberapa elemen sekaligus (mis. lintas <strong>/<br>); pakai cara alternatif.
+        const frag = range.extractContents();
+        span.appendChild(frag);
+        range.insertNode(span);
+      }
+
+      const newRange = document.createRange();
+      newRange.selectNodeContents(span);
+      savedRange = newRange.cloneRange();
+      activeStyleSpan = span;
+
+      if (!opts.silent) {
+        activeEditable.focus();
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+      }
+
+      saveState();
+    }
+
+    document.addEventListener('selectionchange', () => {
+      if (!activeEditable) return;
+      const sel = window.getSelection();
+      if (sel.rangeCount > 0 && activeEditable.contains(sel.anchorNode)) {
+        savedRange = sel.getRangeAt(0).cloneRange();
+      }
+    });
+
+    richFields.forEach((field) => {
+      field.addEventListener('focus', () => showToolbar(field));
+      field.addEventListener('blur', () => {
+        // beri jeda sedikit supaya klik tombol/kontrol toolbar sempat diproses dulu
+        setTimeout(() => {
+          if (document.activeElement !== field && !toolbar.contains(document.activeElement)) {
+            hideToolbar();
+          }
+        }, 150);
+      });
+      field.addEventListener('keyup', () => { if (activeEditable === field) positionToolbar(field); });
+      field.addEventListener('scroll', () => { if (activeEditable === field) positionToolbar(field); });
+    });
+
+    // Cegah tombol toolbar merebut fokus (supaya seleksi teks tidak hilang saat diklik)
+    toolbar.addEventListener('mousedown', (e) => {
+      if (e.target.tagName === 'BUTTON') e.preventDefault();
+    });
+
+    toolbar.querySelectorAll('[data-cmd]').forEach((ctrl) => {
+      const cmd = ctrl.getAttribute('data-cmd');
+      if (ctrl.tagName === 'BUTTON') {
+        // Bold & Miring: tombol tidak pernah merebut fokus (lihat mousedown di atas),
+        // jadi seleksi asli masih aktif dan execCommand aman dipakai di sini.
+        ctrl.addEventListener('click', () => {
+          if (!activeEditable) return;
+          restoreSelection();
+          document.execCommand(cmd, false, null);
+          saveState();
+        });
+      } else if (cmd === 'foreColor') {
+        // 'input' = terus menerus selama digeser -> update warna tanpa rebut fokus.
+        // 'change' = setelah picker ditutup/selesai -> baru kembalikan fokus & seleksi.
+        ctrl.addEventListener('input', () => applyInlineStyle('color', ctrl.value, { silent: true }));
+        ctrl.addEventListener('change', () => applyInlineStyle('color', ctrl.value));
+      } else if (cmd === 'fontSize') {
+        const sizeMap = { '2': '11px', '3': '13px', '5': '17px', '7': '22px' };
+        ctrl.addEventListener('change', () => applyInlineStyle('fontSize', sizeMap[ctrl.value] || '13px'));
+      }
+    });
+
+    window.addEventListener('scroll', () => { if (activeEditable) positionToolbar(activeEditable); }, true);
+  }
+
   function setupAutoSaveListeners() {
     document.querySelectorAll('.psn-select').forEach((select) => {
       select.addEventListener('change', (e) => {
@@ -1837,7 +2106,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
     exportBtn.addEventListener('click', () => {
       const data = {};
       document.querySelectorAll('input[name], select[name], textarea[name]').forEach((field) => { data[field.name] = field.value; });
-      document.querySelectorAll('[data-field-name]').forEach((field) => { data[field.getAttribute('data-field-name')] = field.textContent; });
+      document.querySelectorAll('[data-field-name]').forEach((field) => { data[field.getAttribute('data-field-name')] = field.hasAttribute('data-rich') ? field.innerHTML : field.textContent; });
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -1866,6 +2135,7 @@ td.no { text-align: center; color: #888; font-size: 11px; width: 22px; }
     convertRows();
     createControls();
     setupAutoSaveListeners();
+    setupRichTextEditing();
     restoreState(); // tampilkan dulu versi tersimpan lokal (langsung, tanpa menunggu jaringan)
     updatePrograms();
     const periodInput = document.querySelector('.period-edit');
